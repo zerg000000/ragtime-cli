@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  release:
+    types: [created]
+
+env:
+  TOOL_DEPS_VERSION: '1.10.1.469'
+  JAVA_VERSION: '11.0.5'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/cache@v1
+        id: cache
+        with:
+          path: /root/.m2/
+          key: deps-v2-${{ hashFiles('deps.edn') }}
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+      - uses: DeLaGuardo/setup-clojure@2.0
+        with:
+          tools-deps: ${{ env.TOOL_DEPS_VERSION }}
+      - name: Compile GraalVM Native Image
+        run: clojure -A:native-image
+      - name: Zip as lambda.zip
+        run: |
+          cp $JAVA_HOME/jre/lib/amd64/libsunec.so .
+          cp target/app app
+          cp bin/bootstrap bootstrap
+          chmod 755 app bootstrap
+          zip lambda.zip bootstrap app libsunec.so
+      - name: Upload the artifacts
+        uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: 'lambda.zip'
