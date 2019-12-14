@@ -28,8 +28,8 @@ jobs:
           tools-deps: ${{ env.TOOL_DEPS_VERSION }}
       - name: Compile GraalVM Native Image
         run: |
-          export GRAALVM_HOME=$JAVA_HOME
-          clojure -A:native-image
+          echo $JAVA_HOME
+          clojure -A:native-image --graalvm-home $JAVA_HOME
       - name: Zip as lambda.zip
         run: |
           cp $JAVA_HOME/jre/lib/amd64/libsunec.so .
