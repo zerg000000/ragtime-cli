@@ -1,8 +1,8 @@
 name: Release
 
-on:
-  release:
-    types: [created]
+on: push
+#  release:
+#    types: [created]
 
 env:
   TOOL_DEPS_VERSION: '1.10.1.469'
@@ -23,6 +23,8 @@ jobs:
       - uses: DeLaGuardo/setup-graalvm@2.0
         with:
           graalvm-version: '19.3.0.java8'
+      - name: Install GraalVM native-image plugin
+          run: gu install native-image
       - uses: DeLaGuardo/setup-clojure@2.0
         with:
           tools-deps: ${{ env.TOOL_DEPS_VERSION }}
