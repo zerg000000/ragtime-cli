@@ -4,7 +4,8 @@
     [cli-matic.core :refer [run-cmd]]
     [ragtime.cli.duct]
     [ragtime.cli.dir]
-    [ragtime.cli.core :as cc]))
+    [ragtime.cli.core :as cc]
+    [clojure.java.jdbc :as j]))
 
 (def CONFIGURATION
   {:app         {:command     "ragtime"
@@ -53,6 +54,24 @@
                  {:command     "info"
                   :description "Show current migration info"
                   :runs        (comp cc/info cc/prepare-options)}
+                 {:command     "q"
+                  :description "Send test query to database"
+                  :opts        [{:option "sql"
+                                 :short 0
+                                 :as "SQL"
+                                 :type :string
+                                 :default :present}
+                                {:option "format"
+                                 :short "f"
+                                 :as "Print Format"
+                                 :type :string
+                                 :default "table"}]
+                  :runs        (fn [{:keys [database-url sql format]}]
+                                 (cond-> (j/query {:connection-uri database-url} sql)
+                                         (= format "edn")
+                                         (prn)
+                                         (= format "table")
+                                         (clojure.pprint/print-table)))}
                  {:command     "rollback-to"
                   :description "Rollback to a specific migration ID, using the supplied migration index."
                   :opts        [{:option "migration-id"

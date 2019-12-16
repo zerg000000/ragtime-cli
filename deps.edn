@@ -11,13 +11,16 @@
                         "-O" "-no-server"
                         "-O" "-allow-incomplete-classpath"
                         "-O" "-enable-all-security-services"
-                        "-O" "-initialize-at-run-time=org.postgresql.sspi.SSPIClient"]}}
+                        "-O" "-initialize-at-run-time=org.postgresql.sspi.SSPIClient"]}
+           :postgres
+           {:extra-deps
+            {org.postgresql/postgresql {:mvn/version "42.2.8"}}}
+           :mysql
+           {:extra-deps
+            {mysql/mysql-connector-java {:mvn/version "8.0.18"}}}}
  :deps {org.clojure/clojure {:mvn/version "1.9.0"}
         pandect {:mvn/version "0.6.1"}
         ragtime/core {:mvn/version "0.8.0"}
         ragtime/jdbc {:git/url "https://github.com/zerg000000/ragtime.git" :deps/root "jdbc" :sha "4119224c040c4c8fbae2902bcc8d645d7c0644ed"}
         cli-matic {:mvn/version "0.3.9"
-                   :exclusions [org.clojure/spec.alpha]}
-        ; jdbc drivers, pick what you needed
-        org.postgresql/postgresql {:mvn/version "42.2.8"}}}
-        ;mysql/mysql-connector-java {:mvn/version "8.0.18"}}}
+                   :exclusions [org.clojure/spec.alpha]}}}
