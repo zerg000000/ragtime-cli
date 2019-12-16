@@ -37,7 +37,7 @@ jobs:
           clojure -A:native-image --graalvm-home $JAVA_HOME
       - name: Zip as lambda.zip
         run: |
-          cp $JAVA_HOME/jre/lib/amd64/libsunec.so .
+          cp $JAVA_HOME/lib/libsunec.so .
           cp target/ragtime-cli ragtime-cli
           cp bin/bootstrap bootstrap
           chmod 755 ragtime-cli bootstrap
