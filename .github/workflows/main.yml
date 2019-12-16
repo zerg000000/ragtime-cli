@@ -11,10 +11,10 @@ env:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-   strategy:
-     matrix:
-       os: [macOS-10.14, ubuntu-18.04]
-       jdbc_driver: [postgres]
+    strategy:
+      matrix:
+        os: [macOS-10.14, ubuntu-18.04]
+        jdbc_driver: [postgres]
 
 
     steps:
