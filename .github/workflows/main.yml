@@ -24,7 +24,7 @@ jobs:
         with:
           graalvm-version: '19.3.0.java8'
       - name: Install GraalVM native-image plugin
-          run: gu install native-image
+        run: gu install native-image
       - uses: DeLaGuardo/setup-clojure@2.0
         with:
           tools-deps: ${{ env.TOOL_DEPS_VERSION }}
