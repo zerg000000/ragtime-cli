@@ -16,7 +16,6 @@ jobs:
         os: [macOS-10.14, ubuntu-18.04]
         jdbc_driver: [postgres]
 
-
     steps:
       - uses: actions/checkout@v1
       - uses: actions/cache@v1
