@@ -12,8 +12,8 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
-      matrix:
-        os: [ubuntu-18.04]
+      matrix:   
+        os: [ubuntu-latest, macos-latest]
         jdbc_driver: [postgres]
 
     steps:
@@ -36,8 +36,10 @@ jobs:
           echo $JAVA_HOME
           clojure -A:native-image --graalvm-home $JAVA_HOME
       - name: Zip as lambda.zip
+        env:
+          OS: ${{ matrix.os }}
         run: |
-          cp $JAVA_HOME/lib/libsunec.so .
+          sh bin/copy-files.sh
           cp target/ragtime-cli ragtime-cli
           cp bin/bootstrap bootstrap
           chmod 755 ragtime-cli bootstrap
