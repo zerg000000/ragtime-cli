@@ -39,10 +39,12 @@ jobs:
           cp target/ragtime-cli ragtime-cli
           cp bin/bootstrap bootstrap
           chmod 755 ragtime-cli bootstrap
-          zip lambda-${{ matrix.os }}-${{ matrix.jdbc_driver }}.zip bootstrap ragtime-cli libsunec.so
-      - name: Upload the artifacts
-        uses: skx/github-action-publish-binaries@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          zip lambda-${{ matrix.os }}-${{ matrix.jdbc_driver }}.zip bootstrap ragtime-cli libsunec.so libsunec.a
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v1-release
         with:
-          args: 'lambda-*.zip'
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: lambda-*.zip
+          tag: ${{ github.ref }}
+          overwrite: true
+          file_glob: true
