@@ -30,7 +30,7 @@ jobs:
         with:
           tools-deps: ${{ env.TOOL_DEPS_VERSION }}
       - name: Compile GraalVM Native Image
-        run: clojure -A:native-image
+        run: clojure -A:native-image --graalvm-home $JAVA_HOME
       - name: Zip as lambda.zip
         env:
           OS: ${{ matrix.os }}
