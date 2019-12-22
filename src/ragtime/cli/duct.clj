@@ -18,10 +18,19 @@
   (duct/read-config (io/file config-file)
                     {'duct/resource (fn [f] (io/file (str resources-dir f)))}))
 
+(defn remove-duct-module
+  "Remove duct modules from config"
+  [config]
+  (reduce (fn [acc [k v]]
+            (if-not (re-find #"duct\.module" (namespace k))
+              (assoc acc k v)
+              acc))
+          {} config))
+
 (defmethod cc/prepare-options :duct
   [{:keys [database-url config-file resources-dir reporter] :as ins}]
   (let [config (-> (get-config config-file resources-dir)
-                   (dissoc :duct.module.web/api :duct.module/logging :duct.module/sql)
+                   (remove-duct-module)
                    (duct/prep-config [:duct.profile/prod])
                    (ig/init [:duct.migrator.ragtime/sql]))]
     (merge
