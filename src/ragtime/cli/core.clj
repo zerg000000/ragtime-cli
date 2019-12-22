@@ -4,6 +4,8 @@
             [ragtime.reporter :as reporter]
             [ragtime.jdbc :as jdbc]
             [ragtime.protocols :as p]
+            [duct.core.resource]
+            [duct.migrator.ragtime :as migrator]
             [clojure.pprint :as pp]))
 
 (def reporters
@@ -61,10 +63,8 @@
   [{:keys [last-n migrations] :as opts}]
   (ragtime/rollback-last (get-database opts) (ragtime/into-index migrations) last-n opts))
 
-(defprotocol StringSource
-  (get-string [source]))
 
-(extend-protocol StringSource
+(extend-protocol migrator/StringSource
   String
   (get-string [s] s)
   java.io.File

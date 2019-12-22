@@ -37,7 +37,7 @@
                   :type   :string
                   :env    "CONFIG_FILE"}
                  {:option  "resources-dir"
-                  :short   "dir"
+                  :short   "d"
                   :as      "Duct resources directory / SQL files directory"
                   :type    :string
                   :default "resources/"
