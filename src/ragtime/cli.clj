@@ -17,7 +17,7 @@
                   :type    #{:slient :print}
                   :default :print}
                  {:option  "database-url"
-                  :short   "db"
+                  :short   "c"
                   :as      "The jdbc connection string"
                   :default :present
                   :type    :string
