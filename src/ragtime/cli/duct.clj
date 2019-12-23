@@ -29,7 +29,9 @@
 
 (defmethod cc/prepare-options :duct
   [{:keys [database-url config-file resources-dir reporter] :as ins}]
-  (let [config (-> (get-config config-file resources-dir)
+  (let [raw-config (get-config config-file resources-dir)
+        migration-order (get-in raw-config [:duct.profile/base :duct.migrator/ragtime :migrations])
+        config (-> raw-config
                    (remove-duct-module)
                    (duct/prep-config [:duct.profile/prod])
                    (ig/init [:duct.migrator.ragtime/sql]))]
@@ -37,7 +39,9 @@
       ins
       {:database {:spec {:connection-uri database-url}}
        :reporter (cc/get-reporter reporter)
-       :migrations (map second config)})))
+       :migrations (map (fn [{:keys [key]}]
+                            (get config [:duct.migrator.ragtime/sql key]))
+                     migration-order)})))
 
 (defmethod cc/migrate-all :duct
   [opts]
