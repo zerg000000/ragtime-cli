@@ -4,7 +4,6 @@
             [ragtime.reporter :as reporter]
             [ragtime.jdbc :as jdbc]
             [ragtime.protocols :as p]
-            [duct.core.resource]
             [duct.migrator.ragtime :as migrator]
             [clojure.pprint :as pp]))
 
@@ -33,8 +32,8 @@
 (defmulti info (fn [{:keys [mode]}] mode))
 
 (defmethod info :default
-  [{:keys [migrations] :as opts}]
-  (let [applied-migrations (p/applied-migration-ids (get-database opts))
+  [{:keys [database migrations] :as opts}]
+  (let [applied-migrations (p/applied-migration-ids database)
         list (map (fn [idx applied-id mig]
                     {:idx idx
                      :migration-id (when mig (p/id mig))
@@ -52,16 +51,16 @@
                           mode))
 
 (defmethod migrate-all :default
-  [{:keys [migrations] :as opts}]
-  (ragtime/migrate-all (get-database opts) {} migrations opts))
+  [{:keys [database migrations] :as opts}]
+  (ragtime/migrate-all database (ragtime/into-index migrations) migrations opts))
 
 (defmethod rollback-to :default
-  [{:keys [migration-id migrations] :as opts}]
-  (ragtime/rollback-to (get-database opts) (ragtime/into-index migrations) migration-id opts))
+  [{:keys [database migration-id migrations] :as opts}]
+  (ragtime/rollback-to database (ragtime/into-index migrations) migration-id opts))
 
 (defmethod rollback-last :default
-  [{:keys [last-n migrations] :as opts}]
-  (ragtime/rollback-last (get-database opts) (ragtime/into-index migrations) last-n opts))
+  [{:keys [last-n migrations database] :as opts}]
+  (ragtime/rollback-last database (ragtime/into-index migrations) last-n opts))
 
 
 (extend-protocol migrator/StringSource

@@ -6,7 +6,7 @@
 (defmethod cc/prepare-options :dir
   [{:keys [database-url strategy resources-dir reporter] :as ins}]
   (let [migrations (jdbc/load-directory resources-dir)
-        opts {:database {:spec {:connection-uri database-url}}
+        opts {:database (cc/get-database (assoc ins :database {:spec {:connection-uri database-url}}))
               :strategy (cc/get-strategy strategy)
               :reporter (cc/get-reporter reporter)
               :migrations migrations}]

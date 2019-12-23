@@ -7,13 +7,6 @@
 
 (duct/load-hierarchy)
 
-(defn- migrate [index {:keys [migrations] :as opts}]
-  (let [db    (cc/get-database opts)
-        strat (cc/get-strategy opts)
-        rep   (:reporter opts)]
-    (ragtime/migrate-all db index migrations {:reporter rep, :strategy strat})
-    (ragtime/into-index index migrations)))
-
 (defn get-config [config-file resources-dir]
   (duct/read-config (io/file config-file)
                     {'duct/resource (fn [f] (io/file (str resources-dir f)))}))
@@ -28,7 +21,7 @@
           {} config))
 
 (defmethod cc/prepare-options :duct
-  [{:keys [database-url config-file resources-dir reporter] :as ins}]
+  [{:keys [database-url config-file resources-dir reporter strategy] :as ins}]
   (let [raw-config (get-config config-file resources-dir)
         migration-order (get-in raw-config [:duct.profile/base :duct.migrator/ragtime :migrations])
         config (-> raw-config
@@ -37,12 +30,9 @@
                    (ig/init [:duct.migrator.ragtime/sql]))]
     (merge
       ins
-      {:database {:spec {:connection-uri database-url}}
+      {:database (cc/get-database (assoc ins :database {:spec {:connection-uri database-url}}))
+       :strategy (cc/get-strategy strategy)
        :reporter (cc/get-reporter reporter)
-       :migrations (map (fn [{:keys [key]}]
-                            (get config [:duct.migrator.ragtime/sql key]))
+       :migrations (mapv (fn [{:keys [key]}]
+                           (get config [:duct.migrator.ragtime/sql key]))
                      migration-order)})))
-
-(defmethod cc/migrate-all :duct
-  [opts]
-  (migrate {} opts))

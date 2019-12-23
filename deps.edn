@@ -13,7 +13,7 @@
                         "-O" "-enable-all-security-services"
                         "-O" "-initialize-at-run-time=org.postgresql.sspi.SSPIClient"]}}
  :deps {org.clojure/clojure {:mvn/version "1.9.0"}
-        duct/migrator.ragtime {:git/url "https://github.com/zerg000000/migrator.ragtime.git" :sha "dba95e5b5645e4cd1e81b1d0a316cfccdc899016"}
+        duct/migrator.ragtime {:git/url "https://github.com/zerg000000/migrator.ragtime.git" :sha "1562879f4e3173d755717b6fed9aad21e9dc7513"}
         duct/core {:mvn/version "0.8.0"}
         org.postgresql/postgresql {:mvn/version "42.2.8"}
         ragtime/jdbc {:git/url "https://github.com/zerg000000/ragtime.git" :deps/root "jdbc" :sha "81033b3520c026ea0504e8adb6dbed1640a060f6"}
