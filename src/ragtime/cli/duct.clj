@@ -9,7 +9,8 @@
 
 (defn get-config [config-file resources-dir]
   (duct/read-config (io/file config-file)
-                    {'duct/resource (fn [f] (io/file (str resources-dir f)))}))
+                    {'duct/resource (fn [f] (io/file (str resources-dir f)))
+                     'duct/include (fn [f] (get-config f resources-dir))}))
 
 (defn remove-duct-module
   "Remove duct modules from config"
